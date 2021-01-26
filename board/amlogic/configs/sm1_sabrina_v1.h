@@ -141,7 +141,7 @@
             " console=ttyS0,115200" \
             " no_console_suspend" \
             " earlycon=aml-uart,0xff803000" \
-            " loglevel=0" \
+            " loglevel=3" \
             " ramoops.pstore_en=1" \
             " ramoops.record_size=0x8000" \
             " ramoops.console_size=0x4000" \
@@ -181,11 +181,15 @@
             "echo reboot_mode:::: ${reboot_mode};"\
             "if test ${reboot_mode} = quiescent; then "\
                     "setenv reboot_mode_android ""quiescent"";"\
+                    "setenv dolby_status 0;"\
+                    "setenv dolby_vision_on 0;"\
                     "run storeargs;"\
                     "setenv bootargs ${bootargs} androidboot.quiescent=1;"\
                     "osd open;osd clear;"\
             "elif test ${reboot_mode} = recovery_quiescent; then "\
                     "setenv reboot_mode_android ""quiescent"";"\
+                    "setenv dolby_status 0;"\
+                    "setenv dolby_vision_on 0;"\
                     "run storeargs;"\
                     "setenv bootargs ${bootargs} androidboot.quiescent=1;"\
                     "osd open;osd clear;"\
@@ -327,6 +331,7 @@
             "get_valid_slot;"\
             "echo active_slot: ${active_slot};"\
             "if test ${active_slot} = normal; then "\
+                "run recovery_from_cache;" \
                 "setenv bootargs" \
                     " ${bootargs}" \
                     " aml_dt=${aml_dt}" \
@@ -402,7 +407,6 @@
         CONFIG_EXTRA_ENV_SETTINGS_BASE \
         "lock=10001110\0" \
         "fallback=" \
-            "run recovery_from_cache;" \
             "run recovery_from_flash;" \
             "\0"
 
@@ -424,7 +428,6 @@
             "if usb start 0; then " \
                 "run recovery_from_udisk;" \
             "fi;" \
-            "run recovery_from_cache;" \
             "run recovery_from_flash;" \
             "\0" \
         "recovery_from_sdcard=" \
@@ -455,14 +458,14 @@
 
 #define CONFIG_PREBOOT  \
         "run bcb_cmd; " \
-        "run upgrade_check;" \
         "run init_display;" \
-        "run storeargs;" \
+        "run storeargs;"
+
+#define CONFIG_BOOTCOMMAND \
         "run upgrade_key;" \
         "bcb uboot-command;" \
-        "run switch_bootmode;"
-
-#define CONFIG_BOOTCOMMAND "ddr_auto_fast_boot_check 6;run storeboot"
+        "run switch_bootmode;" \
+        "ddr_auto_fast_boot_check 6;run storeboot"
 
 //#define CONFIG_ENV_IS_NOWHERE  1
 #define CONFIG_ENV_SIZE   (64*1024)

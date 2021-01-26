@@ -206,6 +206,49 @@ static int do_RunBcbCommand(
  ERR:
     return -1;
 }
+
+static int do_CheckBcb(
+    cmd_tbl_t * cmdtp,
+    int flag,
+    int argc,
+    char * const argv[])
+{
+    char command[COMMANDBUF_SIZE] = {0};
+    char miscbuf[MISCBUF_SIZE] = {0};
+    char *partition = "misc";
+    const char *upgradestep = NULL;
+
+    if (argc != 1) {
+        return cmd_usage(cmdtp);
+    }
+
+    upgradestep = getenv("upgrade_step");
+    if (strcmp(upgradestep, "3")) {
+        return 0;
+    }
+
+    if (store_read_ops((unsigned char *)partition,
+        (unsigned char *)miscbuf, 0, sizeof(miscbuf)) < 0) {
+        printf("failed to store read %s.\n", partition);
+        goto OUT;
+    }
+
+    memcpy(command, miscbuf, sizeof(command));
+    printf("get bootloader message from misc partition: %s\n", command);
+
+    if (!memcmp(command, CMD_RUN_RECOVERY, strlen(CMD_RUN_RECOVERY))) {
+        printf("we will enter recovery later, don't need to change upgrade_step\n");
+        return 0;
+    }
+
+OUT:
+    if (!strcmp(upgradestep, "3")) {
+        printf("bcb hasn't valid recovery cmds, set upgradestep from 3 to 1\n");
+        setenv("upgrade_step", "1");
+    }
+    return 0;
+}
+
 #else
 static int do_RunBcbCommand(
     cmd_tbl_t * cmdtp,
@@ -219,8 +262,28 @@ static int do_RunBcbCommand(
     // Do-Nothing!
     return 0;
 }
+
+static int do_CheckBcb(
+    cmd_tbl_t * cmdtp,
+    int flag,
+    int argc,
+    char * const argv[]) {
+    if (argc != 1) {
+        return cmd_usage(cmdtp);
+    }
+
+    // Do-Nothing!
+    return 0;
+}
+
 #endif /* CONFIG_BOOTLOADER_CONTROL_BLOCK */
 
+U_BOOT_CMD(
+    bcb_check, 1, 0, do_CheckBcb,
+    "bcb_check",
+    "\nThis command will check is there recovery cmds in bcb\n"
+    "So you can execute command: bcb_check"
+);
 
 // BCB: Bootloader Control Block
 U_BOOT_CMD(

@@ -127,6 +127,7 @@ function building_uboot(){
     mkdir -p ${tool_path}
     for tool in "aml_encrypt_g12a" \
                 "create-bl-sabrina.sh" \
+                "pack_kpub.py" \
                 "pem_extract_pubkey.py" \
                 "sign-boot-g12a-gen-header" \
                 "sign-boot-g12a.sh"; do
@@ -153,9 +154,11 @@ function build_bootloader_img() {
   firmware_signk_0="${firmware_signk_0:-$sign_boot_keys/firmware_signk_0.pem}"
   firmware_signk_1="${firmware_signk_0:-$sign_boot_keys/firmware_signk_1.pem}"
   kbl_aesk="${kbl_aesk:-$sign_boot_keys/kblaes_derived.bin}"
+  root_rsa_pub_key="${root_rsa_pub_key:-$sign_boot_keys/ta_root_signk.pub.pem}"
+  root_aes_key="${root_aes_key:-$sign_boot_keys/ta_root_aesk.bin}"
   kernel_aesk="${kernel_aesk:-$sign_boot_keys/kernel_aesk.bin}"
   external_kernel_aesk="${external_kernel_aesk:-$sign_boot_keys/external_kernel_aesk.bin}"
-
+  
   local bl_prebuilts_path=${workspace_path}/device/google/$product/prebuilt/bootloader
   local bl_img_dir=$workspace_path/device/google/$product
   local tmp_dir=/tmp
@@ -170,6 +173,8 @@ function build_bootloader_img() {
       -s ${firmware_signk_0} \
       -w ${firmware_signk_1} \
       -a ${kbl_aesk} \
+      -t ${root_rsa_pub_key} \
+      -y ${root_aes_key} \
       -i ${kernel_aesk} \
       -m ${external_kernel_aesk} \
       -o $tmp_dir

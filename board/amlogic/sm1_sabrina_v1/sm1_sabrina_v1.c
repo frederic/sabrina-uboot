@@ -665,6 +665,7 @@ void aml_config_dtb(void)
 int board_late_init(void)
 {
 		//update env before anyone using it
+		run_command("bcb_check", 0);
 		run_command("get_rebootmode; echo reboot_mode=${reboot_mode}; "\
 						"if test ${reboot_mode} = factory_reset; then "\
 						"defenv_reserv;save; fi;", 0);
@@ -835,6 +836,33 @@ const char * const _env_args_reserve_[] =
 		"lock",
 		"upgrade_step",
 		"bootloader_version",
+		"hdr_policy",
+		"hdr_priority",
+		"hdmimode",
+		"outputmode",
+		"colorattribute",
+		"hdmi_colorspace",
+		"hdmi_colordepth",
+		"2160p60hz_deepcolor",
+		"2160p50hz_deepcolor",
+		"2160p30hz_deepcolor",
+		"2160p25hz_deepcolor",
+		"2160p24hz_deepcolor",
+		"smpte24hz_deepcolor",
+		"1080p60hz_deepcolor",
+		"1080p50hz_deepcolor",
+		"1080p24hz_deepcolor",
+		"720p60hz_deepcolor",
+		"720p50hz_deepcolor",
+		"1080i60hz_deepcolor",
+		"1080i50hz_deepcolor",
+		"576p50hz_deepcolor",
+		"480p60hz_deepcolor"
+		"digitaudiooutput",
+		"bestdolbyvision",
+		"is.bestmode",
+		"dolby_vision_on",
+		"dolby_status",
 
 		NULL//Keep NULL be last to tell END
 };

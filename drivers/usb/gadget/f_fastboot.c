@@ -467,7 +467,7 @@ void dump_lock_info(LockData_t* info)
 }
 
 
-static int check_lock(void)
+static int is_locked(void)
 {
 	LockData_t* info;
 	info = malloc(sizeof(struct LockData));
@@ -825,13 +825,13 @@ static void cb_getvar(struct usb_ep *ep, struct usb_request *req)
 		!strcmp_l1("logical-block-size", cmd)) {
 		strncat(response, "2000", chars_left);
 	} else if (!strcmp_l1("secure", cmd)) {
-		if (check_lock()) {
+		if (is_locked()) {
 			strncat(response, "yes", chars_left);
 		} else {
 			strncat(response, "no", chars_left);
 		}
 	} else if (!strcmp_l1("unlocked", cmd)) {
-		if (check_lock()) {
+		if (is_locked()) {
 			strncat(response, "no", chars_left);
 		} else {
 			strncat(response, "yes", chars_left);
@@ -1058,7 +1058,6 @@ static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
 	char *cmd;
 	char* response = response_str;
 	LockData_t* info;
-	size_t chars_left;
 
 	info = malloc(sizeof(struct LockData));
 	if (!info) {
@@ -1070,7 +1069,6 @@ static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
 	dump_lock_info(info);
 
 	strcpy(response, "OKAY");
-	chars_left = sizeof(response_str) - strlen(response) - 1;
 	cmd = strchr(req->buf, ' ');
 	if (!cmd) {
 		error("missing variable\n");
@@ -1096,14 +1094,6 @@ static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
 			fastboot_busy(str);
 			is_unlock_ability_sent = true;
 		}
-	} else if (!strcmp_l1("get_unlock_bootloader_nonce", cmd)) {
-		char str_num[8];
-		sprintf(str_num, "%d", info->lock_critical_state);
-		strncat(response, str_num, chars_left);
-	} else if (!strcmp_l1("unlock_bootloader", cmd)) {
-		strncat(response, "please run flashing unlock & flashing unlock_critical before write", chars_left);
-	} else if (!strcmp_l1("lock_bootloader", cmd)) {
-		info->lock_bootloader = 1;
 	} else if (!strcmp_l1("unlock", cmd)) {
 		if (info->unlock_ability == 1 ) {
 			if (info->lock_state == 1 ) {
@@ -1185,12 +1175,6 @@ static void cb_flash(struct usb_ep *ep, struct usb_request *req)
 		return;
 	}
 
-	if (check_lock()) {
-		error("device is locked, can not run this cmd.Please flashing unlock & flashing unlock_critical\n");
-		fastboot_tx_write_str("FAILlocked device");
-		return;
-	}
-
 #ifdef CONFIG_BOOTLOADER_CONTROL_BLOCK
 	if (dynamic_partition) {
 		if (is_partition_logical(cmd) == 0) {
@@ -1248,12 +1232,6 @@ static void cb_set_active(struct usb_ep *ep, struct usb_request *req)
 		return;
 	}
 
-	if (check_lock()) {
-		error("device is locked, can not run this cmd.Please flashing unlock & flashing unlock_critical\n");
-		fastboot_tx_write_str("FAILlocked device");
-		return;
-	}
-
 	sprintf(str, "set_active_slot %s", cmd);
 	printf("command:    %s\n", str);
 	ret = run_command(str, 0);
@@ -1262,39 +1240,6 @@ static void cb_set_active(struct usb_ep *ep, struct usb_request *req)
 		fastboot_tx_write_str("OKAY");
 	else
 		fastboot_tx_write_str("FAILset slot error");
-}
-
-static void cb_flashall(struct usb_ep *ep, struct usb_request *req)
-{
-	char* response = response_str;
-	char *cmd = req->buf;
-
-	printf("cmd cb_flashall is %s\n", cmd);
-
-	if (check_lock()) {
-		error("device is locked, can not run this cmd.Please flashing unlock & flashing unlock_critical\n");
-		fastboot_tx_write_str("FAILlocked device");
-		return;
-	}
-
-	//strcpy(response, "FAILno flash device defined");
-	if (is_mainstorage_emmc()) {
-#ifdef CONFIG_FASTBOOT_FLASH_MMC_DEV
-		fb_mmc_flash_write(cmd, (void *)CONFIG_USB_FASTBOOT_BUF_ADDR,
-				   download_bytes);
-#endif
-	} else if (is_mainstorage_nand()) {
-#ifdef CONFIG_FASTBOOT_FLASH_NAND_DEV
-		fb_nand_flash_write(cmd, (void *)CONFIG_USB_FASTBOOT_BUF_ADDR,
-					download_bytes);
-#else
-		fastboot_fail("not support nftl\n");
-#endif
-	} else {
-		printf("error: no valid fastboot device\n");
-		fastboot_fail("no vaild device\n");
-	}
-	fastboot_tx_write_str(response);
 }
 
 static void cb_erase(struct usb_ep *ep, struct usb_request *req)
@@ -1308,12 +1253,6 @@ static void cb_erase(struct usb_ep *ep, struct usb_request *req)
 	if (!cmd) {
 		error("missing partition name\n");
 		fastboot_tx_write_str("FAILmissing partition name");
-		return;
-	}
-
-	if (check_lock()) {
-		error("device is locked, can not run this cmd.Please flashing unlock & flashing unlock_critical\n");
-		fastboot_tx_write_str("FAILlocked device");
 		return;
 	}
 
@@ -1346,40 +1285,14 @@ static void cb_erase(struct usb_ep *ep, struct usb_request *req)
 	fastboot_tx_write_str(response);
 }
 
-static void cb_devices(struct usb_ep *ep, struct usb_request *req)
+static void cb_require_unlock(struct usb_ep *ep, struct usb_request *req)
 {
-	char response[RESPONSE_LEN];
-	char *cmd = req->buf;
-
-	printf("cmd is %s\n", cmd);
-
-	strcpy(response, "AMLOGIC");
-
-	fastboot_tx_write_str(response);
-}
-
-static void cb_oem_cmd(struct usb_ep *ep, struct usb_request *req)
-{
-	char response[RESPONSE_LEN/2 + 1];
-	char* cmd = req->buf;
-	printf("oem cmd[%s]\n", cmd);
-	static int i = 0;
-
-	memcpy(response, cmd, strnlen(cmd, RESPONSE_LEN/2)+1);//+1 to terminate str
-	cmd = response;
-	strsep(&cmd, " ");
-	FB_MSG("To run cmd[%s]\n", cmd);
-	run_command(cmd, 0);
-
-    if (++i > 3) i = 0;
-
-	i ? fastboot_busy("AMLOGIC") : fastboot_okay(response);
-	fastboot_tx_write_str(response_str);
-	return ;
+	fastboot_tx_write_str("FAILNot allowed on locked devices");
 }
 
 struct cmd_dispatch_info {
 	char *cmd;
+	bool require_unlock;
 	void (*cb)(struct usb_ep *ep, struct usb_request *req);
 };
 
@@ -1387,60 +1300,55 @@ static const struct cmd_dispatch_info cmd_dispatch_info[] = {
 	{
 		.cmd = "reboot",
 		.cb = cb_reboot,
+		.require_unlock = false,
 	}, {
 		.cmd = "getvar:",
 		.cb = cb_getvar,
+		.require_unlock = false,
 	}, {
 		.cmd = "download:",
 		.cb = cb_download,
+		.require_unlock = true,
 	}, {
 		.cmd = "boot",
 		.cb = cb_boot,
+		.require_unlock = true,
 	}, {
 		.cmd = "continue",
 		.cb = cb_continue,
+		.require_unlock = false,
 	}, {
 		.cmd = "flashing",
 		.cb = cb_flashing,
+		.require_unlock = false,
 	},
 #ifdef CONFIG_FASTBOOT_FLASH
 	{
 		.cmd = "flash",
 		.cb = cb_flash,
+		.require_unlock = true,
 	},
 #endif
 	{
-		.cmd = "update",
-		.cb = cb_download,
-	},
-	{
-		.cmd = "flashall",
-		.cb = cb_flashall,
-	},
-	{
 		.cmd = "erase",
 		.cb = cb_erase,
-	},
-	{
-		.cmd = "devices",
-		.cb = cb_devices,
+		.require_unlock = true,
 	},
 	{
 		.cmd = "reboot-bootloader",
 		.cb = cb_reboot,
+		.require_unlock = false,
 	},
 	{
 		.cmd = "reboot-fastboot",
 		.cb = cb_reboot,
+		.require_unlock = false,
 	},
 	{
 		.cmd = "set_active",
 		.cb = cb_set_active,
+		.require_unlock = true,
 	},
-	{
-		.cmd = "oem",
-		.cb  = cb_oem_cmd,
-	}
 };
 
 //cb for out_req->complete
@@ -1452,7 +1360,12 @@ static void rx_handler_command(struct usb_ep *ep, struct usb_request *req)
 
 	for (i = 0; i < ARRAY_SIZE(cmd_dispatch_info); i++) {
 		if (!strcmp_l1(cmd_dispatch_info[i].cmd, cmdbuf)) {
-			func_cb = cmd_dispatch_info[i].cb;
+			printf("command: %s\n", cmdbuf);
+			if (cmd_dispatch_info[i].require_unlock && is_locked()) {
+				func_cb = cb_require_unlock;
+			} else {
+				func_cb = cmd_dispatch_info[i].cb;
+			}
 			break;
 		}
 	}
