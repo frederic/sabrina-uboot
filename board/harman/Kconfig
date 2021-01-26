@@ -1,0 +1,8 @@
+config ATOM_V1
+	bool "Support harman atom v1 board"
+	default n
+
+if ATOM_V1
+source "board/harman/atom_v1/Kconfig"
+endif
+

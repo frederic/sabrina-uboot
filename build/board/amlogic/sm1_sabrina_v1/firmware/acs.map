@@ -1,0 +1,112 @@
+
+Discarded input sections
+
+ .text          0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .data          0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .bss           0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .rodata.build_message
+                0x0000000000000000       0x53 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .debug_info    0x0000000000000000       0x52 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .debug_abbrev  0x0000000000000000       0x43 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .debug_aranges
+                0x0000000000000000       0x20 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .debug_line    0x0000000000000000       0x28 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .debug_str     0x0000000000000000      0x1ae /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .comment       0x0000000000000000       0x70 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+ .text          0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .data          0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .bss           0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .text          0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+ .data          0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+ .bss           0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+ .data          0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs_entry.o
+ .bss           0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs_entry.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0x00000000fffaf000                . = 0xfffaf000
+
+.               0x00000000fffaf000      0xec0
+                0x00000000fffaf000                __RO_START__ = .
+ *acs_entry.o(.text*)
+ .text          0x00000000fffaf000        0xc /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs_entry.o
+                0x00000000fffaf000                acs_entry
+ *(.text*)
+ *(.data*)
+ *fill*         0x00000000fffaf00c        0x4 
+ .data.__ddr_setting
+                0x00000000fffaf010      0xb10 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+                0x00000000fffaf010                __ddr_setting
+ .data.__ddr_reg
+                0x00000000fffafb20       0x30 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+                0x00000000fffafb20                __ddr_reg
+ .data.__bl2_reg
+                0x00000000fffafb50      0x230 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+                0x00000000fffafb50                __bl2_reg
+ .data.rel.local.__acs_set
+                0x00000000fffafd80       0x70 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+                0x00000000fffafd80                __acs_set
+ .data.__pll_setting
+                0x00000000fffafdf0       0x80 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+                0x00000000fffafdf0                __pll_setting
+ .data.__ramdump_data
+                0x00000000fffafe70       0x50 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+                0x00000000fffafe70                __ramdump_data
+                0x0000000000000001                ASSERT ((. <= 0xfffb0000), timing image has exceeded its limit.)
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs_entry.o
+OUTPUT(/usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.elf elf64-littleaarch64)
+
+.iplt           0x00000000fffafec0        0x0
+ .iplt          0x00000000fffafec0        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+
+.igot.plt       0x00000000fffafec0        0x0
+ .igot.plt      0x00000000fffafec0        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+
+.rela.dyn       0x00000000fffafec0        0x0
+ .rela.iplt     0x00000000fffafec0        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/build_message.o
+
+.debug_info     0x0000000000000000      0xa7d
+ .debug_info    0x0000000000000000      0x984 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .debug_info    0x0000000000000984       0xf9 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+
+.debug_abbrev   0x0000000000000000      0x178
+ .debug_abbrev  0x0000000000000000       0xec /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .debug_abbrev  0x00000000000000ec       0x8c /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+
+.debug_aranges  0x0000000000000000       0x40
+ .debug_aranges
+                0x0000000000000000       0x20 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .debug_aranges
+                0x0000000000000020       0x20 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+
+.debug_line     0x0000000000000000      0x182
+ .debug_line    0x0000000000000000       0xf3 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .debug_line    0x00000000000000f3       0x8f /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+
+.debug_str      0x0000000000000000      0xb35
+ .debug_str     0x0000000000000000      0xa00 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+                                        0xa36 (size before relaxing)
+ .debug_str     0x0000000000000a00      0x135 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+                                        0x28f (size before relaxing)
+
+.comment        0x0000000000000000       0x6f
+ .comment       0x0000000000000000       0x6f /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+                                         0x70 (size before relaxing)
+ .comment       0x000000000000006f       0x70 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o
+
+.note.GNU-stack
+                0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/acs.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/board/amlogic/sm1_sabrina_v1/firmware/ramdump.o

@@ -1,0 +1,173 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/user_task.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/misc.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/uart.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/string.o
+LOAD /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/delay.o
+                0x000000001000a000                . = 0x1000a000
+
+.text           0x000000001000a000     0x1605
+ *task_entry.o(.text)
+ .text          0x000000001000a000        0xc /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+                0x000000001000a000                task_entry
+ *(.text .text*)
+ .text          0x000000001000a00c      0x140 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/user_task.o
+                0x000000001000a00c                __switch_idle_task
+                0x000000001000a014                __switch_back_securemb
+                0x000000001000a01c                __switch_back_highmb
+                0x000000001000a024                __switch_back_lowmb
+                0x000000001000a02c                secure_task
+                0x000000001000a0a4                set_wakeup_method
+                0x000000001000a0b0                process_high_task
+                0x000000001000a0b2                high_task
+                0x000000001000a0dc                process_low_task
+                0x000000001000a120                low_task
+ .text          0x000000001000a14c       0x1c /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/misc.o
+                0x000000001000a14c                bss_init
+ .text          0x000000001000a168       0x9c /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/uart.o
+                0x000000001000a168                wait_uart_empty
+                0x000000001000a188                uart_tx_flush
+                0x000000001000a198                uart_putc
+                0x000000001000a1c4                uart_puts
+                0x000000001000a1d8                uart_put_hex
+ .text          0x000000001000a204     0x1278 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+                0x000000001000a204                get_wakeup_source
+                0x000000001000a50c                setremotereg
+                0x000000001000a514                set_remote_mode
+                0x000000001000a560                backuremote_register
+                0x000000001000a5b0                resume_remote_register
+                0x000000001000a5f0                init_custom_trigger
+                0x000000001000a618                remote_init_pwrkeys
+                0x000000001000a628                remote_get_pwrkeys
+                0x000000001000a630                saradc_enable
+                0x000000001000a72c                get_adc_sample_gxbb
+                0x000000001000a7ec                saradc_disable
+                0x000000001000a828                check_adc_key_resume
+                0x000000001000a83a                remote_cec_hw_reset
+                0x000000001000aa10                cec_routing_change
+                0x000000001000aa34                cec_handler
+                0x000000001000af0c                cec_node_init
+                0x000000001000b1cc                cec_power_on_check
+                0x000000001000b3a4                suspend_pwr_ops_init
+                0x000000001000b3dc                suspend_get_wakeup_source
+                0x000000001000b3f0                enter_suspend
+ .text          0x000000001000b47c       0x26 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/string.o
+                0x000000001000b47c                memcpy
+                0x000000001000b492                memset
+ *fill*         0x000000001000b4a2        0x2 
+ .text          0x000000001000b4a4       0x20 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/delay.o
+                0x000000001000b4a4                get_time
+                0x000000001000b4b0                _udelay
+ *(.ARM.*)
+ .ARM.attributes
+                0x000000001000b4c4       0x21 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+ .ARM.attributes
+                0x000000001000b4e5       0x33 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/user_task.o
+ .ARM.attributes
+                0x000000001000b518       0x21 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/misc.o
+ .ARM.attributes
+                0x000000001000b539       0x33 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/uart.o
+ .ARM.attributes
+                0x000000001000b56c       0x33 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+ .ARM.attributes
+                0x000000001000b59f       0x33 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/string.o
+ .ARM.attributes
+                0x000000001000b5d2       0x33 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/delay.o
+
+.glue_7         0x000000001000b608        0x0
+ .glue_7        0x000000001000b608        0x0 linker stubs
+
+.glue_7t        0x000000001000b608        0x0
+ .glue_7t       0x000000001000b608        0x0 linker stubs
+
+.vfp11_veneer   0x000000001000b608        0x0
+ .vfp11_veneer  0x000000001000b608        0x0 linker stubs
+
+.v4_bx          0x000000001000b608        0x0
+ .v4_bx         0x000000001000b608        0x0 linker stubs
+
+.iplt           0x000000001000b608        0x0
+ .iplt          0x000000001000b608        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+
+.rel.dyn        0x000000001000b608        0x0
+ .rel.iplt      0x000000001000b608        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+
+.common
+ *(.commo*)
+
+.data           0x000000001000b608      0x9f9
+ *(.bss .data .rodata*)
+ .data          0x000000001000b608        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+ .bss           0x000000001000b608        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+ .data          0x000000001000b608        0xc /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/user_task.o
+                0x000000001000b608                secure_task_share_mem
+                0x000000001000b60c                high_task_share_mem
+                0x000000001000b610                low_task_share_mem
+ .bss           0x000000001000b614        0x4 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/user_task.o
+                0x000000001000b614                resume_data
+ .rodata.str1.1
+                0x000000001000b618       0x51 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/user_task.o
+                                         0x53 (size before relaxing)
+ .data          0x000000001000b669        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/misc.o
+ .bss           0x000000001000b669        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/misc.o
+ .data          0x000000001000b669        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/uart.o
+ .bss           0x000000001000b669        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/uart.o
+ *fill*         0x000000001000b669        0x3 
+ .data          0x000000001000b66c      0x1a8 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+                0x000000001000b810                usr_pwr_key
+ .bss           0x000000001000b814       0xd0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+                0x000000001000b818                cec_msg
+                0x000000001000b840                backuAO_RTI_PIN_MUX_REG
+                0x000000001000b844                backuAO_IR_DEC_REG0
+                0x000000001000b848                backuAO_IR_DEC_REG1
+                0x000000001000b84c                backuAO_IR_DEC_LDR_ACTIVE
+                0x000000001000b850                backuAO_IR_DEC_LDR_IDLE
+                0x000000001000b854                backuAO_IR_DEC_BIT_0
+                0x000000001000b858                bakeuAO_IR_DEC_LDR_REPEAT
+                0x000000001000b85c                pwr_keys_list
+                0x000000001000b868                cec_tx_msgs
+                0x000000001000b8b2                hdmi_cec_func_config
+                0x000000001000b8e0                time
+ .rodata        0x000000001000b8e4      0x380 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+ .rodata.str1.1
+                0x000000001000bc64      0x39d /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+                                        0x3a2 (size before relaxing)
+ .data          0x000000001000c001        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/string.o
+ .bss           0x000000001000c001        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/string.o
+ .data          0x000000001000c001        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/delay.o
+ .bss           0x000000001000c001        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/delay.o
+
+.igot.plt       0x000000001000c004        0x0
+ .igot.plt      0x000000001000c004        0x0 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+                0x000000001000c004                . = ALIGN (0x4)
+                0x000000001000c004                _bssstart = .
+
+.bss
+ *(.bss)
+                0x000000001000c004                . = ALIGN (0x4)
+                0x000000001000c004                _bssend = .
+                0x000000001000cd80                . = 0x1000cd80
+
+.bss_stack      0x000000001000cd80      0x600
+ *(.bss_stack.usr_stack)
+ .bss_stack.usr_stack
+                0x000000001000cd80      0x600 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/task_entry.o
+                0x0000000000000001                ASSERT ((_bssend <= 0x1000cd80), Data is too big. Please fine-tune start address and LENGTH!)
+OUTPUT(/usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/bl301.out elf32-littlearm)
+
+.comment        0x0000000000000000       0x6f
+ .comment       0x0000000000000000       0x6f /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/user_task.o
+                                         0x70 (size before relaxing)
+ .comment       0x000000000000006f       0x70 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/uart.o
+ .comment       0x000000000000006f       0x70 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/suspend.o
+ .comment       0x000000000000006f       0x70 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/string.o
+ .comment       0x000000000000006f       0x70 /usr/local/google/home/rogerwu/amlogic-sdk/u-boot/build/scp_task/lib/delay.o
