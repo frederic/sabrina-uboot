@@ -51,6 +51,8 @@
 /* SMP Definitinos */
 #define CPU_RELEASE_ADDR        secondary_boot_func
 
+#undef CONFIG_SILENT_CONSOLE
+
 /* config saradc*/
 #define CONFIG_CMD_SARADC 1
 #define CONFIG_SARADC_CH  2
@@ -297,17 +299,14 @@
             "if test ${active_slot} != normal; then "\
                 "setenv bootargs ${bootargs} androidboot.slot_suffix=${active_slot};"\
             "fi;"\
-            "if test ${avb2} = 0; then "\
-                "if test ${active_slot} = _a; then "\
-                    "setenv bootargs ${bootargs} root=/dev/mmcblk0p23;"\
-                "else if test ${active_slot} = _b; then "\
-                    "setenv bootargs ${bootargs} root=/dev/mmcblk0p24;"\
-                "fi;fi;"\
-            "fi;"\
-            "if imgread kernel ${boot_part} ${loadaddr}; then "\
-                "bootm ${loadaddr};"\
-            "fi;"\
-            "run fallback;"\
+            "echo Sleep 10 secs before USB DRIVE boot from ${loadaddr} ...; "\
+            "sleep 10; "\
+            "usb start 0; "\
+            "usb tree; "\
+            "usb info; "\
+            "fatload usb 0 ${loadaddr} s905_autoscript;"\
+            "setenv autoscript_source usb; "\
+            "autoscr ${loadaddr};"\
             "\0"\
         "upgrade_check=" \
             "echo upgrade_step=${upgrade_step}; "\
@@ -397,9 +396,7 @@
         "upgrade_key=" \
             "if gpio input GPIOAO_10; then " \
                 "echo GPIOAO_10 pressed;" \
-                "if usb start 0; then " \
-                    "run recovery_from_udisk;" \
-                "fi;" \
+                "update 0;" \
             "fi;" \
             "\0"
 
@@ -443,10 +440,6 @@
             "fi;" \
             "\0"
 
-#ifdef AML_DISABLE_UPDATE_MODE
-#define CONFIG_EXTRA_ENV_SETTINGS CONFIG_EXTRA_ENV_SETTINGS_RELEASE
-#define CONFIG_BOOTDELAY 0
-#else
 #define CONFIG_EXTRA_ENV_SETTINGS CONFIG_EXTRA_ENV_SETTINGS_DEV
 #define CONFIG_BOOTDELAY 1
 //UBOOT Facotry usb/sdcard burning config
@@ -454,7 +447,6 @@
 #define CONFIG_AML_FACTORY_BURN_LOCAL_UPGRADE   1       //support factory sdcard burning
 #define CONFIG_POWER_KEY_NOT_SUPPORTED_FOR_BURN 1       //There isn't power-key for factory sdcard burning
 #define CONFIG_SD_BURNING_SUPPORT_UI            1       //Displaying upgrading progress bar when sdcard/udisk burning
-#endif  // AML_DISABLE_UPDATE_MODE
 
 #define CONFIG_PREBOOT  \
         "run bcb_cmd; " \
@@ -467,7 +459,7 @@
         "run switch_bootmode;" \
         "ddr_auto_fast_boot_check 6;run storeboot"
 
-//#define CONFIG_ENV_IS_NOWHERE  1
+#define CONFIG_ENV_IS_NOWHERE  1
 #define CONFIG_ENV_SIZE   (64*1024)
 #define CONFIG_ENV_OFFSET_REDUND (CONFIG_ENV_SIZE)
 #define CONFIG_SYS_REDUNDAND_ENVIRONMENT
@@ -584,7 +576,6 @@
 //#define     CONFIG_AML_GPT
 
 /* meson SPI */
-#define CONFIG_AML_SPIFC
 //#define CONFIG_AML_SPICC
 #if defined CONFIG_AML_SPIFC || defined CONFIG_AML_SPICC
 	#define CONFIG_OF_SPI
@@ -680,9 +671,9 @@
 #define USB_G12x_PHY_PLL_SETTING_5	(0xe000c)
 
 //UBOOT fastboot config
-#define CONFIG_CMD_FASTBOOT 1
-#define CONFIG_FASTBOOT_FLASH_MMC_DEV 1
-#define CONFIG_FASTBOOT_FLASH 1
+//#define CONFIG_CMD_FASTBOOT 1
+//#define CONFIG_FASTBOOT_FLASH_MMC_DEV 1
+//#define CONFIG_FASTBOOT_FLASH 1
 #define CONFIG_USB_GADGET 1
 #define CONFIG_USBDOWNLOAD_GADGET 1
 #define CONFIG_SYS_CACHELINE_SIZE 64
